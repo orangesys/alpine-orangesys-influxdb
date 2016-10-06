@@ -1,0 +1,36 @@
+machine:
+  environment:
+    PROJECT_NAME: orangesys
+    CLOUDSDK_COMPUTE_ZONE: asia-east1-c
+    CLUSTER_NAME: orangesysio
+    DEBIAN_FRONTEND: noninteractive
+    BUCKETS_NAME: orangesys-influxdb
+
+  pre:
+    - curl -sSL https://s3.amazonaws.com/circle-downloads/install-circleci-docker.sh | bash -s -- 1.10.0
+    - sudo /opt/google-cloud-sdk/bin/gcloud --quiet components update
+    - echo $GCLOUD_SERVICE_KEY | base64 --decode -i > ${HOME}/account-auth.json
+    - sudo /opt/google-cloud-sdk/bin/gcloud auth activate-service-account --key-file ${HOME}/account-auth.json
+    - sudo /opt/google-cloud-sdk/bin/gcloud config set project $PROJECT_NAME
+
+  services:
+    - docker
+
+dependencies:
+  cache_directories:
+    - "~/docker"
+
+  pre:
+    - docker info
+
+test:
+  override:
+    - ./build.sh
+
+deployment:
+  hub:
+    branch: master
+    commands:
+      - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
+      - docker push orangesys/alpine-orangesys-influxdb
+      - ./deploy.sh
