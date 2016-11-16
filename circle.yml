@@ -62,4 +62,4 @@ deployment:
       - docker push orangesys/alpine-orangesys-influxdb
       - ./deploy.sh
       - docker logout
-      - curl -X https://hooks.microbadger.com/images/orangesys/alpine-orangesys-influxdb/MxMCnhHfqsOnIeY8lsp535xrNYQ=
+      - curl -X POST https://hooks.microbadger.com/images/orangesys/alpine-orangesys-influxdb/MxMCnhHfqsOnIeY8lsp535xrNYQ=
