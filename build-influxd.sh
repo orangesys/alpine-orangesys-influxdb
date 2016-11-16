@@ -50,7 +50,7 @@ for path in $dockerfiles; do
 done
 
 if [ ${#failed_builds[@]} -eq 0 ]; then
-  docker run --rm=false -v "$(pwd)/influxdb":/root/go/src/github.com/influxdata/influxdb influxdb-builder --package --static --release || /bin/true
+  docker_run --rm=false -v "$(pwd)/influxdb":/root/go/src/github.com/influxdata/influxdb influxdb-builder --package --static --release
   cp ./influxdb/build/influxdb-${tag}-static_linux_amd64.tar.gz ${tag}/
   log_msg "All builds succeeded."
 else
@@ -59,4 +59,3 @@ else
     echo "	$tag"
   done
 fi
-rm -rf influxdb

@@ -33,6 +33,7 @@ dependencies:
 
   post:
     - ./build-influxd.sh
+    - sudo rm -rf influxdb
     - ./build.sh
     - docker images
 
