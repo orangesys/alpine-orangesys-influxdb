@@ -21,5 +21,5 @@ for path in $dockerfiles; do
   tag=$(echo $path | sed 's@/@:@' | sed 's@/@-@g')
   log_msg "Tagging docker image $tag with gcr tag"
   docker tag "orangesys/alpine-orangesys-influxdb:${tag}" "asia.gcr.io/orange-sys/alpine-orangesys-influxdb:${tag}"
-  sudo /opt/google-cloud-sdk/bin/gcloud docker push asia.gcr.io/orange-sys/alpine-orangesys-influxdb:${tag}
+  sudo /opt/google-cloud-sdk/bin/gcloud docker -- push asia.gcr.io/orange-sys/alpine-orangesys-influxdb:${tag}
 done
