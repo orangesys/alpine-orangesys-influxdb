@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e
+set -ex
 
 dir=.
 if [ $# -gt 0 ]; then
@@ -43,10 +43,16 @@ for path in $dockerfiles; do
   log_msg "Building influxd-${tag} bin file"
   git clone -b v${tag} https://github.com/influxdata/influxdb.git
   curl -sL https://raw.githubusercontent.com/gavinzhou/influxdb/orangesys-logger-patch/services/httpd/response_logger.go > ./influxdb/services/httpd/response_logger.go
-  if ! docker_build -f ./influxdb/Dockerfile_build_ubuntu64 -t influxdb-builder influxdb; then
-    failed_builds+=("$tag")
+  if [ ! -e ~/docker ]; then
+    mkdir ~/docker
+    if ! docker_build -f ./influxdb/Dockerfile_build_ubuntu64 -t influxdb-builder influxdb; then
+      failed_builds+=("$tag")
+    fi
+    docker save influxdb-builder > ~/docker/influxdb-builder.tar
+    log_msg "Building docker image influxdb-builder"
+  else
+    docker load < ~/docker/influxdb-builder.tar
   fi
-  log_msg "Building docker image influxdb-builder"
 done
 
 if [ ${#failed_builds[@]} -eq 0 ]; then
