@@ -1,4 +1,4 @@
-FROM alpine:3.4
+FROM alpine:3.5
 MAINTAINER gavin zhou <gavin.zhou@gmail.com>
 
 ADD ./influxdb-*-static_linux_amd64.tar.gz /
