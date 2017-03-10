@@ -24,6 +24,9 @@ dependencies:
     - "~/docker"
     - ~/download
 
+  override:
+    - true
+
   pre:
     - git tag
     - docker info
