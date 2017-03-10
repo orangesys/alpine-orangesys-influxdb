@@ -25,7 +25,7 @@ dependencies:
     - ~/download
 
   override:
-    - true
+    - /bin/true
 
   pre:
     - git tag
