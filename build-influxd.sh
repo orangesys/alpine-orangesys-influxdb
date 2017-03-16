@@ -2,6 +2,7 @@
 
 set -ex
 
+rm -rf influxdb
 dir=.
 if [ $# -gt 0 ]; then
   dir=("$@")
