@@ -2,7 +2,7 @@ FROM alpine:3.6
 MAINTAINER gavin zhou <gavin.zhou@gmail.com>
 
 ENV INFLUXDB_VERSION 1.3.1
-RUN RUN echo 'hosts: files dns' >> /etc/nsswitch.conf && \
+RUN echo 'hosts: files dns' >> /etc/nsswitch.conf && \
     apk add --no-cache tzdata && \
     apk add --no-cache -X http://dl-cdn.alpinelinux.org/alpine/edge/community dumb-init && \
     set -ex && \
