@@ -17,6 +17,7 @@ dependencies:
 test:
   override:
     - docker run -d -p 8086:8086 orangesys/alpine-orangesys-influxdb
+    - curl -I http://127.0.0.1:8086/ping
     - curl -sI http://127.0.0.1:8086/ping |grep -q X-Influxdb-Version
     - docker stop $(docker ps -a -q)
     - docker rm $(docker ps -a -q) || /bin/true
