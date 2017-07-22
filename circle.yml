@@ -16,7 +16,6 @@ machine:
     - /bin/true
 
   post:
-    - docker info
     - ./build.sh
     - docker images
 
