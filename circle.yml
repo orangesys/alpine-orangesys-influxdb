@@ -13,10 +13,10 @@ machine:
     - docker
 
   override:
-    - docker info
     - /bin/true
 
   post:
+    - docker info
     - ./build.sh
     - docker images
 
