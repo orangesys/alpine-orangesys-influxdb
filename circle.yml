@@ -2,19 +2,14 @@ machine:
   environment:
     PROJECT_NAME: orangesys
     CLOUDSDK_COMPUTE_ZONE: asia-northeast1-c
-
-  pre:
-    - curl -sSL https://s3.amazonaws.com/circle-downloads/install-circleci-docker.sh | bash -s -- 1.10.0
-
   timezone:
     Asia/Tokyo
-
   services:
     - docker
 
-  override:
-    - /bin/true
-
+dependencies:
+  pre:
+    - docker info
   post:
     - ./build.sh
     - docker images
@@ -25,6 +20,11 @@ test:
     - curl -sI http://127.0.0.1:8086/ping |grep -q X-Influxdb-Version
     - docker stop $(docker ps -a -q)
     - docker rm $(docker ps -a -q) || /bin/true
+
+general:
+  branches:
+    ignore:
+      - /^(?!master).*$/
 
 deployment:
   release:
