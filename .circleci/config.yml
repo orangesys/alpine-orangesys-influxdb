@@ -4,7 +4,6 @@ references:
   container_config: &container_config
     docker:
       - image: google/cloud-sdk
-    working_directory: ~/${CIRCLE_PROJECT_REPONAME}
     environment:
       PROJECT_NAME: orangesys
       CLOUDSDK_COMPUTE_ZONE: asia-northeast1-c
