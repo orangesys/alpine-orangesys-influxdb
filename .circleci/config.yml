@@ -67,7 +67,6 @@ jobs:
           name: Show docker images & set tag & push docker hub and gcloud
           command: |
             docker login -u $DOCKER_USER -p $DOCKER_PASS
-            docker push orangesys/${CIRCLE_PROJECT_REPONAME}
             ./scripts/push-container-images.sh
 
 workflows:
