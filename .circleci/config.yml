@@ -40,6 +40,3 @@ workflows:
   build-and-deploy:
     jobs:
       - build_container
-          filters:
-            tags:
-              only: /^v[0-9]+(\.[0-9]+)*/
