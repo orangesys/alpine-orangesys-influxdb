@@ -34,7 +34,7 @@ jobs:
           name: Build container images
           command: |
             set +o pipefail
-            ./scripts/build.sh
+            ./scripts/create-container.sh
       - save_cache:
           key: v1-{{ .Branch }}-{{ epoch }}
           paths:
