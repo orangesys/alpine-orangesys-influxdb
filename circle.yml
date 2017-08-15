@@ -11,7 +11,7 @@ dependencies:
   pre:
     - docker info
   post:
-    - ./scipts/build.sh
+    - ./scripts/build.sh
     - docker images
 
 test:
