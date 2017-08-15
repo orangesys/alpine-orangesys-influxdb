@@ -31,7 +31,7 @@ jobs:
             tar -xz -C /tmp/ -f /tmp/docker-$VER.tgz
             mv /tmp/docker/* /usr/bin
       - run:
-          name: Build alpine-orangesys-influxdb container images
+          name: Build container images
           command: |
             set +o pipefail
             ./scripts/create-container.sh
