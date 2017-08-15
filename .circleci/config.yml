@@ -34,9 +34,3 @@ jobs:
         key: v1-{{ .Branch }}-{{ epoch }}
         paths:
           - /caches/alpine-orangeapi.tar
-
-workflows:
-  version: 2
-  build-and-deploy:
-    jobs:
-      - build_container
