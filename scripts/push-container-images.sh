@@ -1,9 +1,8 @@
 #!/bin/bash
 set -ex
-_v=$(git describe --always --tags)
-version=${_v#*v}  
 
-docker login -u $DOCKER_USER -p $DOCKER_PASS
+version=$(git describe --always --tags|sed 's/^v//')
+
 docker push "orangesys/${CIRCLE_PROJECT_REPONAME}:${version}"
 
 echo $GCLOUD_SERVICE_KEY | base64 --decode -i > ${HOME}/account-auth.json
