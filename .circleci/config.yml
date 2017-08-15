@@ -41,8 +41,7 @@ jobs:
             - /caches/alpine-orangesys-influxdb.tar
 
   deploy:
-    docker:
-      <<: *container_config
+    <<: *container_config
     steps:
       - checkout
       - setup_remote_docker
