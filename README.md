@@ -4,4 +4,3 @@
 [![Docker Repository on Quay](https://quay.io/repository/orangesys/alpine-orangesys-influxdb/status?token=c4f50eb8-0ca2-430a-88bc-e6dd70222434 "Docker Repository on Quay")](https://quay.io/repository/orangesys/alpine-orangesys-influxdb)
 
 # alpine-influxdb
-

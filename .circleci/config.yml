@@ -4,12 +4,12 @@ references:
   container_config: &container_config
     docker:
       - image: google/cloud-sdk
-    working_directory: ~/alpine-orangesys-influxdb
+    working_directory: ~/${CIRCLE_PROJECT_REPONAME}
     environment:
       PROJECT_NAME: orangesys
       CLOUDSDK_COMPUTE_ZONE: asia-northeast1-c
       ORG_PATH: "github.com/orangesys"
-      REPO_PATH: "${ORG_PATH}/alpine-orangesys-influxdb"    
+      REPO_PATH: "${ORG_PATH}/${CIRCLE_PROJECT_REPONAME}"    
 
 jobs:
   build_container:
@@ -21,7 +21,7 @@ jobs:
           keys:
             - v1-{{ .Branch }}
           paths:
-            - /caches/alpine-orangesys-influxdb.tar
+            - /caches/${CIRCLE_PROJECT_REPONAME}.tar
       - run:
           name: Install docker client
           command: |
@@ -38,7 +38,7 @@ jobs:
       - save_cache:
           key: v1-{{ .Branch }}-{{ epoch }}
           paths:
-            - /caches/alpine-orangesys-influxdb.tar
+            - /caches/${CIRCLE_PROJECT_REPONAME}.tar
 
   deploy:
     <<: *container_config
@@ -49,7 +49,7 @@ jobs:
           keys:
             - v1-{{ .Branch }}
           paths:
-            - /caches/alpine-orangesys-influxdb.tar
+            - /caches/${CIRCLE_PROJECT_REPONAME}.tar
       - run:
           name: Install docker client
           command: |
@@ -62,13 +62,13 @@ jobs:
           name: Load Docker image layer cache
           command: |
             set +o pipefail
-            docker load -i /caches/alpine-orangeapi.tar | true
+            docker load -i /caches/${CIRCLE_PROJECT_REPONAME}.tar | true
       - run:
           name: Show docker images & Set tag to gcloud docker images
           command: |
             set +o pipefail
             version=$(git describe --always --tags|sed 's/^v//') 
-            docker tag "orangesys/alpine-orangesys-influxdb:${version}" "asia.gcr.io/saas-orangesys-io/alpine-orangesys-influxdb:${version}"
+            docker tag "orangesys/${CIRCLE_PROJECT_REPONAME}:${version}" "asia.gcr.io/saas-orangesys-io/${CIRCLE_PROJECT_REPONAME}:${version}"
             docker images
       - run:
           name: Push docker hub and gcloud
