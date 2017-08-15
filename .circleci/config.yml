@@ -20,7 +20,7 @@ jobs:
           keys:
             - v1-{{ .Branch }}
           paths:
-            - /caches/${CIRCLE_PROJECT_REPONAME}.tar
+            - /caches/alpine-orangesys-influxdb.tar
       - run:
           name: Install docker client
           command: |
@@ -34,9 +34,9 @@ jobs:
           command: |
             ./scripts/create-container.sh
       - save_cache:
-          key: v1-{{ .Branch }}
+          key: v1-{{ .Branch }}-{{ epoch }}
           paths:
-            - /caches/${CIRCLE_PROJECT_REPONAME}.tar
+            - /caches/alpine-orangesys-influxdb.tar
 
   deploy:
     <<: *container_config
@@ -47,7 +47,7 @@ jobs:
           keys:
             - v1-{{ .Branch }}
           paths:
-            - /caches/${CIRCLE_PROJECT_REPONAME}.tar
+            - /caches/alpine-orangesys-influxdb.tar
       - run:
           name: Install docker client
           command: |
@@ -61,7 +61,7 @@ jobs:
           command: |
             set +o pipefail
             ls /caches/
-            docker load -i /caches/${CIRCLE_PROJECT_REPONAME}.tar | true
+            docker load -i /caches/alpine-orangesys-influxdb.tar | true
             docker images
       - run:
           name: Show docker images & set tag & push docker hub and gcloud
