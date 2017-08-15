@@ -31,6 +31,12 @@ jobs:
             set +o pipefail
             ./scripts/create-container.sh
       - save_cache:
-        key: v1-{{ .Branch }}-{{ epoch }}
-        paths:
-          - /caches/alpine-orangeapi.tar
+          key: v1-{{ .Branch }}-{{ epoch }}
+          paths:
+            - /caches/alpine-orangeapi.tar
+
+workflows:
+  version: 2
+  build-and-deploy:
+    jobs:
+      - build_container
