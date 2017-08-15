@@ -11,7 +11,7 @@ dependencies:
   pre:
     - docker info
   post:
-    - ./build.sh
+    - ./scipts/build.sh
     - docker images
 
 test:
@@ -40,5 +40,5 @@ deployment:
       - docker push orangesys/alpine-orangesys-influxdb
       - docker logout
       - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS quay.io
-      - ./deploy.sh
+      - ./scripts/deploy.sh
       - curl -X POST https://hooks.microbadger.com/images/orangesys/alpine-orangesys-influxdb/MxMCnhHfqsOnIeY8lsp535xrNYQ=
