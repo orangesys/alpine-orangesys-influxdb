@@ -32,7 +32,6 @@ jobs:
       - run:
           name: Build container images
           command: |
-            set +o pipefail
             ./scripts/create-container.sh
       - save_cache:
           key: v1-{{ .Branch }}-{{ epoch }}
@@ -65,7 +64,6 @@ jobs:
       - run:
           name: Show docker images & set tag & push docker hub and gcloud
           command: |
-            set +o pipefail
             ./scripts/push-container-images.sh
 
 workflows:
