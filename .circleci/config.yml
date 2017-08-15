@@ -5,6 +5,11 @@ references:
     docker:
       - image: google/cloud-sdk
     working_directory: ~/alpine-orangesys-influxdb
+    environment:
+      PROJECT_NAME: orangesys
+      CLOUDSDK_COMPUTE_ZONE: asia-northeast1-c
+      ORG_PATH: "github.com/orangesys"
+      REPO_PATH: "${ORG_PATH}/alpine-orangesys-influxdb"    
 
 jobs:
   build_container:
@@ -16,7 +21,7 @@ jobs:
           keys:
             - v1-{{ .Branch }}
           paths:
-            - /caches/alpine-orangeapi.tar
+            - /caches/alpine-orangesys-influxdb.tar
       - run:
           name: Install docker client
           command: |
@@ -33,10 +38,58 @@ jobs:
       - save_cache:
           key: v1-{{ .Branch }}-{{ epoch }}
           paths:
-            - /caches/alpine-orangeapi.tar
+            - /caches/alpine-orangesys-influxdb.tar
+
+  deploy:
+    docker:
+      <<: *container_config
+    steps:
+      - checkout
+      - setup_remote_docker
+      - restore_cache:
+          keys:
+            - v1-{{ .Branch }}
+          paths:
+            - /caches/alpine-orangesys-influxdb.tar
+      - run:
+          name: Install docker client
+          command: |
+            set -x
+            VER="17.05.0-ce"
+            curl -L -o /tmp/docker-$VER.tgz https://get.docker.com/builds/Linux/x86_64/docker-$VER.tgz
+            tar -xz -C /tmp/ -f /tmp/docker-$VER.tgz
+            mv /tmp/docker/* /usr/bin
+      - run:
+          name: Load Docker image layer cache
+          command: |
+            set +o pipefail
+            docker load -i /caches/alpine-orangeapi.tar | true
+      - run:
+          name: Show docker images & Set tag to gcloud docker images
+          command: |
+            set +o pipefail
+            version=$(git describe --always --tags|sed 's/^v//') 
+            docker tag "orangesys/alpine-orangesys-influxdb:${version}" "asia.gcr.io/saas-orangesys-io/alpine-orangesys-influxdb:${version}"
+            docker images
+      - run:
+          name: Push docker hub and gcloud
+          command: |
+            set +o pipefail
+            ./scripts/push-container-images.sh
 
 workflows:
   version: 2
   build-and-deploy:
     jobs:
-      - build_container
+      - build_container:
+          filters:
+            tags:
+              only: /^v[0-9]+(\.[0-9]+)*/ 
+      - deploy:
+          requires:
+            - build_container
+          filters:
+            tags:
+              only: /^v[0-9]+(\.[0-9]+)*/
+            branches:
+              ignore: /.*/
