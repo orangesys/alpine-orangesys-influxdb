@@ -63,14 +63,7 @@ jobs:
             set +o pipefail
             docker load -i /caches/${CIRCLE_PROJECT_REPONAME}.tar | true
       - run:
-          name: Show docker images & Set tag to gcloud docker images
-          command: |
-            set +o pipefail
-            version=$(git describe --always --tags|sed 's/^v//') 
-            docker tag "orangesys/${CIRCLE_PROJECT_REPONAME}:${version}" "asia.gcr.io/saas-orangesys-io/${CIRCLE_PROJECT_REPONAME}:${version}"
-            docker images
-      - run:
-          name: Push docker hub and gcloud
+          name: Show docker images & set tag & push docker hub and gcloud
           command: |
             set +o pipefail
             ./scripts/push-container-images.sh
