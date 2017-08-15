@@ -3,4 +3,5 @@
 set -ex
 
 version=$(git describe --always --tags|sed 's/^v//')
-docker -t "orangesys/alpine-orangesys-influxdb:${version}" .
+docker build --tag "orangesys/alpine-orangesys-influxdb:${version}" .
+docker images
