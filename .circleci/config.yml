@@ -66,7 +66,6 @@ jobs:
       - run:
           name: Show docker images & set tag & push docker hub and gcloud
           command: |
-            set +x
             docker login -u $DOCKER_USER -p $DOCKER_PASS
             echo $GCLOUD_SERVICE_KEY | base64 --decode -i > ${HOME}/account-auth.json
             gcloud auth activate-service-account --key-file ${HOME}/account-auth.json
