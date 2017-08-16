@@ -64,7 +64,6 @@ jobs:
           name: Load Docker image layer cache
           command: |
             set +o pipefail
-            ls /caches/
             docker load -i /caches/alpine-orangesys-influxdb.tar | true
             docker images
       - run:
