@@ -1,7 +1,7 @@
 #!/bin/bash
 set -ex
 
-version=$(git describe --always --tags|sed 's/^v//')
+version=$(git describe --always --tags)
 docker run -d --name influx -p 8086:8086 orangesys/alpine-orangesys-influxdb:${version}
 
 docker run --network container:influx \
