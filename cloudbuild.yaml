@@ -1,0 +1,13 @@
+steps:
+- id: 'build-tag'
+  name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'asia.gcr.io/$PROJECT_ID/alpine-orangesys-influxdb:$TAG_NAME', '.']
+- id: 'push'
+  name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'asia.gcr.io/$PROJECT_ID/alpine-orangesys-influxdb:$TAG_NAME']
+- id: 'deploy'
+  name: 'gcr.io/cloud-builders/kubectl'
+  args: ['set', 'image', 'deployment/demo-i-influxdb', 'demo-g-grafana=asia.gcr.io/$PROJECT_ID/alpine-orangesys-influxdb:$TAG_NAME']
+  env:
+  - 'CLOUDSDK_COMPUTE_ZONE=asia-northeast1-c'
+  - 'CLOUDSDK_CONTAINER_CLUSTER=orangesys-io'
