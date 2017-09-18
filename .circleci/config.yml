@@ -8,7 +8,13 @@ references:
       PROJECT_NAME: orangesys
       CLOUDSDK_COMPUTE_ZONE: asia-northeast1-c
       ORG_PATH: "github.com/orangesys"
-      REPO_PATH: "${ORG_PATH}/${CIRCLE_PROJECT_REPONAME}"    
+      REPO_PATH: "${ORG_PATH}/${CIRCLE_PROJECT_REPONAME}"
+  workspace_root: &workspace_root
+    /tmp/workspace
+
+  attach_workspace: &attach_workspace
+    attach_workspace:
+      at: *workspace_root
 
 jobs:
   build_container:
@@ -16,11 +22,6 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker
-      - restore_cache:
-          keys:
-            - v1-{{ .Branch }}
-          paths:
-            - /caches/alpine-orangesys-influxdb.tar
       - run:
           name: Install docker client
           command: |
@@ -37,21 +38,22 @@ jobs:
           name: Test influxdb container images
           command: |
             ./scripts/checkinfluxdb.sh
-      - save_cache:
-          key: v1-{{ .Branch }}-{{ epoch }}
+      - run:
+          name: save container image to workspace
+          command: |
+            version=$(git describe --always --tags)
+            mkdir -p /tmp/workspace
+            docker save -o /tmp/workspace/${CIRCLE_PROJECT_REPONAME}.tar "orangesys/${CIRCLE_PROJECT_REPONAME}:${version}"
+      - persist_to_workspace:
+          root: *workspace_root
           paths:
-            - /caches/alpine-orangesys-influxdb.tar
+            - .
 
   deploy:
     <<: *container_config
     steps:
-      - checkout
+      - *attach_workspace
       - setup_remote_docker
-      - restore_cache:
-          keys:
-            - v1-{{ .Branch }}
-          paths:
-            - /caches/alpine-orangesys-influxdb.tar
       - run:
           name: Install docker client
           command: |
@@ -64,16 +66,13 @@ jobs:
           name: Load Docker image layer cache
           command: |
             set +o pipefail
-            docker load -i /caches/alpine-orangesys-influxdb.tar | true
+            docker load -i /tmp/workspace/${CIRCLE_PROJECT_REPONAME}.tar | true
             docker images
       - run:
           name: Show docker images & set tag & push docker hub and gcloud
           command: |
             docker login -u $DOCKER_USER -p $DOCKER_PASS
-            echo $GCLOUD_SERVICE_KEY | base64 --decode -i > ${HOME}/account-auth.json
-            gcloud auth activate-service-account --key-file ${HOME}/account-auth.json
-            gcloud config set project $PROJECT_NAME
-            ./scripts/push-container-images.sh
+            docker push orangesys/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_TAG}
             curl -X POST https://hooks.microbadger.com/images/orangesys/alpine-orangesys-influxdb/MxMCnhHfqsOnIeY8lsp535xrNYQ=
 
 workflows:
@@ -83,12 +82,12 @@ workflows:
       - build_container:
           filters:
             tags:
-              only: /^v[0-9]+(\.[0-9]+)*/ 
+              only: /^v[0-9]+(\.[0-9]+)*(.*)*/ 
       - deploy:
           requires:
             - build_container
           filters:
             tags:
-              only: /^v[0-9]+(\.[0-9]+)*/
+              only: /^v[0-9]+(\.[0-9]+)*(.*)*/
             branches:
               ignore: /.*/
