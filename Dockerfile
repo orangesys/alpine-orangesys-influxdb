@@ -19,11 +19,9 @@ RUN echo 'hosts: files dns' >> /etc/nsswitch.conf && \
     wget -q https://dl.influxdata.com/influxdb/releases/influxdb-${INFLUXDB_VERSION}-static_linux_amd64.tar.gz && \
     gpg --batch --verify influxdb-${INFLUXDB_VERSION}-static_linux_amd64.tar.gz.asc influxdb-${INFLUXDB_VERSION}-static_linux_amd64.tar.gz && \
     mkdir -p /usr/src && \
-    tar -C /usr/src -xzf influxdb-${INFLUXDB_VERSION}-static_linux_amd64.tar.gz && \
-    rm -f /usr/src/influxdb-*/influxdb.conf && \
-    chmod +x /usr/src/influxdb-*/* && \
-    cp -a /usr/src/influxdb-*/* /usr/bin/ && \
-    rm -rf *.tar.gz* /usr/src /root/.gnupg && \
+    tar -xzf influxdb-${INFLUXDB_VERSION}-static_linux_amd64.tar.gz && \
+    chmod +x /usr/bin/influx_inspect /usr/bin/influx_stress /usr/bin/influxd /usr/bin/influx_tsm /usr/bin/influx && \
+    rm -rf *.tar.gz* /usr/src /root/.gnupg /etc/influxdb/influxdb.conf && \
     apk del .build-deps
 
 COPY config.docker/influxdb.conf /etc/influxdb/influxdb.conf
