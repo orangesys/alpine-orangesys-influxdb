@@ -1,7 +1,7 @@
-FROM alpine:3.6
+FROM alpine:3.7
 LABEL maintainer "gavin zhou <gavin.zhou@gmail.com>"
 
-ENV INFLUXDB_VERSION 1.4.2
+ENV INFLUXDB_VERSION 1.3.8
 RUN echo 'hosts: files dns' >> /etc/nsswitch.conf && \
     apk add --no-cache tzdata && \
     apk add --no-cache -X http://dl-cdn.alpinelinux.org/alpine/edge/community dumb-init && \
