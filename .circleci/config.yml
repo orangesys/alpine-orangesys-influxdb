@@ -33,11 +33,11 @@ jobs:
       - run:
           name: Build container images
           command: |
-            ./scripts/create-container.sh
+            .circleci/create-container.sh
       - run:
           name: Test influxdb container images
           command: |
-            ./scripts/checkinfluxdb.sh
+            .circleci/checkinfluxdb.sh
       - run:
           name: save container image to workspace
           command: |
