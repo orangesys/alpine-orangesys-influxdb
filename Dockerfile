@@ -2,10 +2,7 @@ FROM alpine:3.7
 LABEL maintainer "gavin zhou <gavin.zhou@gmail.com>"
 
 ENV INFLUXDB_VERSION 1.5.3
-RUN echo 'hosts: files dns' >> /etc/nsswitch.conf && \
-    apk add --no-cache tzdata && \
-    apk add --no-cache -X http://dl-cdn.alpinelinux.org/alpine/edge/community dumb-init && \
-    set -ex && \
+RUN set -ex && \
     apk add --no-cache --virtual .build-deps wget gnupg tar ca-certificates && \
     update-ca-certificates && \
     for key in \
@@ -15,8 +12,8 @@ RUN echo 'hosts: files dns' >> /etc/nsswitch.conf && \
         gpg --keyserver pgp.mit.edu --recv-keys "$key" || \
         gpg --keyserver keyserver.pgp.com --recv-keys "$key" ; \
     done && \
-    wget -q https://dl.influxdata.com/influxdb/releases/influxdb-${INFLUXDB_VERSION}-static_linux_amd64.tar.gz.asc && \
-    wget -q https://dl.influxdata.com/influxdb/releases/influxdb-${INFLUXDB_VERSION}-static_linux_amd64.tar.gz && \
+    wget --no-verbose https://dl.influxdata.com/influxdb/releases/influxdb-${INFLUXDB_VERSION}-static_linux_amd64.tar.gz.asc && \
+    wget --no-verbose https://dl.influxdata.com/influxdb/releases/influxdb-${INFLUXDB_VERSION}-static_linux_amd64.tar.gz && \
     gpg --batch --verify influxdb-${INFLUXDB_VERSION}-static_linux_amd64.tar.gz.asc influxdb-${INFLUXDB_VERSION}-static_linux_amd64.tar.gz && \
     mkdir -p /usr/src && \
     tar -C /usr/src -xzf influxdb-${INFLUXDB_VERSION}-static_linux_amd64.tar.gz && \
