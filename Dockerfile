@@ -2,7 +2,7 @@ FROM alpine:3.7
 LABEL maintainer "gavin zhou <gavin.zhou@gmail.com>"
 
 RUN echo 'hosts: files dns' >> /etc/nsswitch.conf
-RUN apk add --no-cache tzdata bash
+RUN apk add --no-cache tzdata bash dumb-init
 
 ENV INFLUXDB_VERSION 1.5.3
 RUN set -ex && \
