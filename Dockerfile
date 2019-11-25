@@ -1,4 +1,4 @@
-FROM alpine:3.9
+FROM alpine:3.10.3
 LABEL maintainer "gavin zhou <gavin.zhou@gmail.com>"
 
 RUN echo 'hosts: files dns' >> /etc/nsswitch.conf
