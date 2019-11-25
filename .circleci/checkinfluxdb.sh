@@ -4,6 +4,7 @@ set -ex
 version=$(git describe --always --tags)
 docker run -d --name influx -p 8086:8086 orangesys/alpine-orangesys-influxdb:${version}
 
+sleep 5
 docker run --network container:influx \
 		orangesys/docker-curl -I 'http://127.0.0.1:8086/ping'
 
