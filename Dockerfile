@@ -4,7 +4,7 @@ LABEL maintainer "gavin zhou <gavin.zhou@gmail.com>"
 RUN echo 'hosts: files dns' >> /etc/nsswitch.conf
 RUN apk add --no-cache tzdata bash dumb-init
 
-ENV INFLUXDB_VERSION 1.7.8
+ENV INFLUXDB_VERSION 1.7.9
 RUN set -ex && \
     apk add --no-cache --virtual .build-deps wget gnupg tar ca-certificates && \
     update-ca-certificates && \
